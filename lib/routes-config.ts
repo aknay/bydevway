@@ -2,7 +2,7 @@
 export const ROUTES = [
   {
     title: 'Frontend Framework',
-    href: 'catagories',
+    href: 'categories',
     items: [
       { title: 'Introduction', href: '/docs/getting-started/quick-start-guide' },
       { title: 'Installation', href: '/installation' },
