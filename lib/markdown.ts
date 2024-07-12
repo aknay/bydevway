@@ -88,7 +88,8 @@ function sluggify(text: string) {
 }
 
 function getContentPath(slug: string) {
-  return path.join(process.cwd(), '/contents/docs/', `${slug}.mdx`)
+  // return path.join(process.cwd(), '/contents/docs/', `${slug}.mdx`)
+  return path.join(process.cwd(), '/contents/categories', `${slug}.mdx`)
 }
 
 // for copying the code

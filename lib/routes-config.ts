@@ -1,6 +1,18 @@
 // for page navigation & to sort on leftbar
 export const ROUTES = [
   {
+    title: 'Artificial Intelligence',
+    href: 'categories',
+    items: [
+      // { title: 'Introduction', href: '/docs/getting-started/quick-start-guide' },
+      // { title: 'Installation', href: '/installation' },
+      // { title: 'Quick Start Guide', href: '/quick-start-guide' },
+      // { title: 'Project Structure', href: '/project-structure' },
+      // { title: 'Changelog', href: '/changelog' },
+      // { title: 'FAQ', href: '/faq' },
+    ],
+  },
+  {
     title: 'Frontend Framework',
     href: 'categories',
     items: [
