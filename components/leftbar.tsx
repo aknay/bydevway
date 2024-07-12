@@ -11,7 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Logo, NavMenu } from './navbar'
 import { Button } from './ui/button'
 import { AlignLeftIcon } from 'lucide-react'
-import { FooterButtons } from './footer'
+import { FooterButtons } from './AnotherFooter'
 import { ROUTES } from 'lib/routes-config'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from './ui/sheet'
 
@@ -29,7 +29,7 @@ export function SheetLeftbar() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="flex md:hidden">
+        <Button variant="ghost" size="sm" className="flex md:hidden">
           <AlignLeftIcon />
         </Button>
       </SheetTrigger>

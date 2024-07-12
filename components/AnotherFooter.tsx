@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { buttonVariants } from './ui/button'
 import { HeartIcon, TriangleIcon } from 'lucide-react'
 
-export function Footer() {
+export function AnotherFooter() {
   return (
     <footer className="h-16 w-full border-t">
       <div className="text-muted-foreground container flex h-full flex-wrap items-center justify-center gap-4 py-3 text-sm sm:justify-between sm:gap-0 sm:py-0">

@@ -1,7 +1,8 @@
 'use client'
 
-import { getTocs } from '@/lib/markdown'
+// import { getTocs } from '@/lib/markdown'
 import clsx from 'clsx'
+import { getTocs } from 'lib/markdown'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 

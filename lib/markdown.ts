@@ -18,6 +18,12 @@ type MdxFrontmatter = {
   description: string
 }
 
+type Heading = {
+  level: number; // Assuming headingLevel is a number
+  text: string; // Assuming headingText is a string
+  href: string;
+};
+
 // add custom components
 const components = {
   Tabs,
@@ -60,7 +66,7 @@ export async function getTocs(slug: string) {
   // captures between ## - #### can modify accordingly
   const headingsRegex = /^(#{2,4})\s(.+)$/gm
   let match
-  const extractedHeadings = []
+  const extractedHeadings: Heading[] = []
   while ((match = headingsRegex.exec(rawMdx)) !== null) {
     const headingLevel = match[1].length
     const headingText = match[2].trim()

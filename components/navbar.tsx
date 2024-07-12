@@ -51,7 +51,7 @@ export function Navbar() {
             <div className="flex">
               <Link
                 href="https://github.com/nisabmohd/Docs-Stater-Template"
-                className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+                className={buttonVariants({ variant: 'ghost', size: 'sm' })}
               >
                 <GithubIcon className="h-[1.1rem] w-[1.1rem]" />
               </Link>

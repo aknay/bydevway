@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { cn } from 'lib/utils'
 import { MdxCard } from './mdx-card'
 import { Callout } from './callout'
+import { useMDXComponent } from 'pliny/mdx-components'
 
 const components = {
   h1: ({ className, ...props }) => (

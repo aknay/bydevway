@@ -17,7 +17,7 @@ export default function Copy({ content }: { content: string }) {
   }
 
   return (
-    <Button variant="secondary" size="xs" onClick={handleCopy}>
+    <Button variant="secondary" size="sm" onClick={handleCopy}>
       {isCopied ? <CheckIcon className="h-3 w-3" /> : <CopyIcon className="h-3 w-3" />}
     </Button>
   )
