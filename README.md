@@ -1,4 +1,4 @@
-# bydevway.github.io
+# bydevway
 
 # install pnpm
 `curl -fsSL https://get.pnpm.io/install.sh | sh -`
@@ -8,3 +8,4 @@
 
 # To run
 `pnpm dev`
+
