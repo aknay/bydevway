@@ -1,9 +1,9 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
   title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
+  author: 'Nay Aung Kyaw',
   headerTitle: 'ByDevWay',
-  description: 'A blog created with Next.js and Tailwind.css',
+  description: 'SaaS, Tools, Developer Way, Artificial intelligence',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
