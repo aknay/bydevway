@@ -12,6 +12,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
+import Toc from '@/components/toc'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -104,16 +105,21 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   })
 
   const Layout = layouts[post.layout || defaultLayout]
-
+  const pathName = params.slug.join('/')
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="flex items-start gap-12">
+      <div className="flex-[3] py-10">
       <PostSimple content={mainContent} next={next} prev={prev}>
         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </PostSimple>
+      </div>
+      <Toc path={pathName} />
+    </div>
     </>
   )
 }
