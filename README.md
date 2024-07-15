@@ -4,7 +4,7 @@
 `curl -fsSL https://get.pnpm.io/install.sh | sh -`
 
 # install package
-`pnpm -i`
+`pnpm install`
 
 # To run
 `pnpm dev`

@@ -1,6 +1,6 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
+  title: 'By Dev Way - Build SaaS',
   author: 'Nay Aung Kyaw',
   headerTitle: 'ByDevWay',
   description: 'SaaS, Tools, Developer Way, Artificial intelligence',

@@ -1,61 +1,119 @@
-import DocsBreadcrumb from '@/components/docs-breadcrumb'
-import Pagination from '@/components/pagination'
-import Toc from '@/components/toc'
-// import { page_routes } from "@/lib/routes-config";
+import 'css/prism.css'
+import 'katex/dist/katex.css'
+
+import { components } from '@/components/MDXComponents'
+import siteMetadata from '@/data/siteMetadata'
+import PostBanner from '@/layouts/PostBanner'
+import PostLayout from '@/layouts/PostLayout'
+import PostSimple from '@/layouts/PostSimple'
+import type { Authors, Blog } from 'contentlayer/generated'
+import { allAuthors, allBlogs } from 'contentlayer/generated'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-// import { getMarkdownForSlug } from "@/lib/markdown";
-import { PropsWithChildren, cache } from 'react'
-import { page_routes } from 'lib/routes-config'
-import { getMarkdownForSlug } from 'lib/markdown'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
 
-type PageProps = {
+const defaultLayout = 'PostLayout'
+const layouts = {
+  PostSimple,
+  PostLayout,
+  PostBanner,
+}
+
+export async function generateMetadata({
+  params,
+}: {
   params: { slug: string[] }
-}
+}): Promise<Metadata | undefined> {
+  const slug = decodeURI(params.slug.join('/'))
+  const post = allBlogs.find((p) => p.slug === slug)
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  if (!post) {
+    return
+  }
 
-const cachedGetMarkdownForSlug = cache(getMarkdownForSlug)
+  const publishedAt = new Date(post.date).toISOString()
+  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+  const authors = authorDetails.map((author) => author.name)
+  let imageList = [siteMetadata.socialBanner]
+  if (post.images) {
+    imageList = typeof post.images === 'string' ? [post.images] : post.images
+  }
+  const ogImages = imageList.map((img) => {
+    return {
+      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+    }
+  })
 
-export default async function DocsPage({ params: { slug = [] } }: PageProps) {
-  const pathName = slug.join('/')
-  const res = await cachedGetMarkdownForSlug(pathName)
-
-  if (!res) notFound()
-  return (
-    <div className="flex items-start gap-12">
-      <div className="flex-[3] py-10">
-        <DocsBreadcrumb paths={slug} />
-        <Markdown>
-          <h1>{res.frontmatter.title}</h1>
-          <p className="text-muted-foreground -mt-4 text-[16.5px]">{res.frontmatter.description}</p>
-          <div>{res.content}</div>
-          <Pagination pathname={pathName} />
-        </Markdown>
-      </div>
-      <Toc path={pathName} />
-    </div>
-  )
-}
-
-function Markdown({ children }: PropsWithChildren) {
-  return (
-    <div className="prose-code:font-code prose prose-zinc w-[85vw] pt-2 dark:prose-invert prose-headings:scroll-m-20 prose-code:rounded-md prose-code:bg-neutral-100 prose-code:p-1 prose-code:text-sm prose-code:leading-6 prose-code:text-neutral-800 prose-pre:border prose-pre:bg-neutral-100 dark:prose-code:bg-neutral-900 dark:prose-code:text-white dark:prose-pre:bg-neutral-900 sm:mx-auto sm:w-full">
-      {children}
-    </div>
-  )
-}
-
-export async function generateMetadata({ params: { slug = [] } }: PageProps) {
-  const pathName = slug.join('/')
-  const res = await cachedGetMarkdownForSlug(pathName)
-  if (!res) return null
-  const { frontmatter } = res
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title: post.title,
+    description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      siteName: siteMetadata.title,
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      url: './',
+      images: ogImages,
+      authors: authors.length > 0 ? authors : [siteMetadata.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: imageList,
+    },
   }
 }
 
-export function generateStaticParams() {
-  return page_routes.map((item) => ({
-    slug: item.href.split('/'),
-  }))
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+}
+
+export default async function Page({ params }: { params: { slug: string[] } }) {
+  const slug = decodeURI(params.slug.join('/'))
+  // Filter out drafts in production
+  const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
+  const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
+  if (postIndex === -1) {
+    return notFound()
+  }
+
+  const prev = sortedCoreContents[postIndex + 1]
+  const next = sortedCoreContents[postIndex - 1]
+  const post = allBlogs.find((p) => p.slug === slug) as Blog
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  const mainContent = coreContent(post)
+  const jsonLd = post.structuredData
+  jsonLd['author'] = authorDetails.map((author) => {
+    return {
+      '@type': 'Person',
+      name: author.name,
+    }
+  })
+
+  const Layout = layouts[post.layout || defaultLayout]
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PostSimple content={mainContent} next={next} prev={prev}>
+        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
+      </PostSimple>
+    </>
+  )
 }
